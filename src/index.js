@@ -19,6 +19,10 @@ app.use(cookieParser());
 
 // routes
 
+import authRouter from './routes/auth.routes.js'
+
+app.use("/api/v1",authRouter)
+
 
 const port=process.env.PORT || 8001;
 
