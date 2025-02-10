@@ -56,4 +56,4 @@ const placementSchema = new mongoose.Schema({
     },
 }, {timestamps: true})
 
-export const User = mongoose.model("Placement", placementSchema)
+export const Placement = mongoose.model("Placement", placementSchema)
