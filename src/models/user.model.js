@@ -1,6 +1,7 @@
 import mongoose  from "mongoose";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+
 const userSchema=new mongoose.Schema({
     name:{
         type:String,
@@ -10,6 +11,7 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true,
         unique:true,
+        index:true // helps in searching the email faster
     },
     password:{
         type:String,
@@ -31,12 +33,12 @@ const userSchema=new mongoose.Schema({
 
 
 // Before saving the password into database we are hashing it (this is like a middleware)
-userSchema.pre("save",async function (next){
+userSchema.pre("save", async function (next){
     // NOTE: arrow function should not be used because that will not give current context
     
     
     if(this.isModified("password")){// isModified is provided by this hook only
-        this.password= await bcrypt.hash(this.password,10)//10 is number of rounds 
+        this.password= await bcrypt.hash(this.password, 10)//10 is number of rounds 
     }
 
     // current password is hashed now whenever the data of user is 'saved' it will saved hashed password
