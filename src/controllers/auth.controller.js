@@ -1,5 +1,6 @@
 import { User } from "../models/user.model.js";
 import { apiError } from "../utils/apiError.js";
+import uploadOnCloudinary from '../utils/cloudinary.js'
 
 const registerUser= (req, res, next)=>{
     // res.json({message:"OK"})
@@ -27,7 +28,8 @@ const registerUser= (req, res, next)=>{
             throw new apiError(400, "Resume file is required.");
         }
 
-        const resume = await uploadeOnCloudinary(resumeFileLocation);
+        const resume = await uploadOnCloudinary(resumeFileLocation);
+        if(!resume) throw new apiError(500,"Error while uploading resume")
         
         //create the mongo user object
         const user = await User.create({
@@ -35,14 +37,14 @@ const registerUser= (req, res, next)=>{
             password, 
             name, 
             role, 
-            resume: resume.url
+            resume: resume?.url
         })
 
         //to return the user object without password
         const createdUser = await User.findById(user._id).select("-password");
 
         if(!createdUser){
-            throw new apiError(500, "Something went wrong while registeration.");
+            throw new apiError(500, "Something went wrong while registration.");
         }
 
         return res.status(201).json({message: "User registered successfully!", user: createdUser});
