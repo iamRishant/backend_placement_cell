@@ -57,7 +57,7 @@ userSchema.methods.isPasswordCorrect= async function(candidatePassword){
 userSchema.methods.generateAccessToken= function(){
     // we will simply generate the access token while logging in (after the user is authenticated)
     return jwt.sign({
-        _id:this.id,
+        _id:this._id,
         email:this.email,
     },  
     

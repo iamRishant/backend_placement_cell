@@ -9,7 +9,6 @@ const connectDB=async()=>{
      else throw new Error("Connection to database not established")
    } catch (error) {
         console.log(`Error connecting to database : ${error.message}`);
-        
    }
 }
 

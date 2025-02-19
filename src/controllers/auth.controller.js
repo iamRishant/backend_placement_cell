@@ -2,22 +2,24 @@ import { User } from "../models/user.model.js";
 import { apiError } from "../utils/apiError.js";
 import uploadOnCloudinary from '../utils/cloudinary.js'
 
-const registerUser= (req, res, next)=>{
+const registerUser= (req, res)=>{
     // res.json({message:"OK"})
     Promise.resolve()
-    .then( async() => 
-    {
+    .then(async()=>{
         const {email, password, name, role} = req.body;
         
         // to do in the following steps, 
         // confirm null fields first
         
-        if([email, password, name, role].some((field) => field?.trim() === "")){
+        if(
+            [email, password, name, role].some((field) => field?.trim() === "")
+        ){
             throw new apiError(400, "All fields are required.");
         }
 
         // check if user already exists or not
-        if(await User.findOne({email})){
+        const existedUser = await User.findOne({email});
+        if(existedUser){
             throw new apiError(409, "User already exists.");
         }
 
@@ -48,42 +50,42 @@ const registerUser= (req, res, next)=>{
         }
 
         return res.status(201).json({message: "User registered successfully!", user: createdUser});
-    })  
-    .catch((error) => next(error)) 
+    })
+    .catch((error) => next(error));
 }
 
 
-// Login admin code
+// Login admin code 
 
-const loginAdmin = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+// const loginAdmin = async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
 
-        // Validate input
-        if (!email || !password) {
-            throw new apiError(400, "Email and password are required");
-        }
+//         // Validate input
+//         if (!email || !password) {
+//             throw new apiError(400, "Email and password are required");
+//         }
 
-        // Check if user exists and is an admin
-        const admin = await User.findOne({ email, role: "admin" });
-        if (!admin) {
-            throw new apiError(404, "Admin not found or unauthorized");
-        }
+//         // Check if user exists and is an admin
+//         const admin = await User.findOne({ email, role: "admin" });
+//         if (!admin) {
+//             throw new apiError(404, "Admin not found or unauthorized");
+//         }
 
-        // Verify password
-        const isMatch = await admin.isPasswordCorrect(password);
-        if (!isMatch) {
-            throw new apiError(401, "Invalid credentials");
-        }
+//         // Verify password
+//         const isMatch = await admin.isPasswordCorrect(password);
+//         if (!isMatch) {
+//             throw new apiError(401, "Invalid credentials");
+//         }
 
-        // Generate JWT token
-        const token = admin.generateAccessToken();
+//         // Generate JWT token
+//         const token = admin.generateAccessToken();
 
-        res.status(200).json({ message: "Login successful", token });
-    } catch (error) {
-        throw new apiError(500, error.message);
-    }
-};
+//         res.status(200).json({ message: "Login successful", token });
+//     } catch (error) {
+//         throw new apiError(500, error.message);
+//     }
+// };
 
 // Login user code
 
@@ -110,11 +112,36 @@ const loginUser = async (req, res) => {
 
         // Generate JWT token
         const token = user.generateAccessToken();
+        const loggedInUser = await User.findById(user._id).select("-password");
 
-        res.status(200).json({ message: "Login successful", token, role: user.role });
+        //allows secure transfer of cookies, and only accessible by the server only
+        const options = {
+            httpOnly: true, 
+            secure: true
+        }
+
+        return res.status(200)
+        .cookie("token", token, options)
+        .json({ message: "User Login successful", token, user: loggedInUser });
     } catch (error) {
         throw new apiError(500, error.message);
     }
 };
 
-export  {loginAdmin,loginUser,registerUser};
+const logoutUser = async (_, res) => {
+    try {
+        const options = {
+            httpOnly: true, 
+            secure: true
+        }
+    
+        return res.status(200)
+        .clearCookie("token", options)
+        .json({ message: "User Logout successful" });
+        //local storage token & user detail deletion is done by front end
+    } catch (error) {
+        throw new apiError(500, error.message);
+    }
+}
+
+export { registerUser, loginUser, logoutUser };
