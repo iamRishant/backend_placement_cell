@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { loginAdmin, loginUser, registerUser } from "../controllers/auth.controller.js";
+import { registerUser, loginUser, logoutUser } from "../controllers/auth.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
-
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { verifyRoles } from "../middlewares/role.middleware.js";
+import { getAdminDashboard, getStudentDashboard } from "../controllers/dashboard.controller.js";
 
 const router=Router();
-// admin login 
-router.post('/admin/login',loginAdmin);
+// router.post('/admin/login',loginAdmin);
 // user signup and login
 
 //below route method allows:
@@ -19,7 +20,13 @@ router.route('/user/signup').post
     ]),
     registerUser
 );
+router.route('/user/login').post(loginUser);
+router.route('/user/logout').post(verifyJWT, logoutUser);
 
-router.post('/user/login',loginUser);
+//securing routes with middleware
+//between login and dashboard load, it loads the correct dashboard based on the role
+//verifyJWT checks if the token is valid
+router.get('/admin/dashboard', verifyJWT, verifyRoles("admin"), getAdminDashboard);
+router.get('/student/dashboard', verifyJWT, verifyRoles("student"), getStudentDashboard);
 
 export default router;
