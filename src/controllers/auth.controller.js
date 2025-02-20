@@ -17,6 +17,10 @@ const registerUser= (req, res)=>{
             throw new apiError(400, "All fields are required.");
         }
 
+        if(role === "admin"){
+            throw new apiError(403, "Unauthorized to register as admin.");
+        }
+
         // check if user already exists or not
         const existedUser = await User.findOne({email});
         if(existedUser){
