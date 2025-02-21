@@ -29,6 +29,6 @@ router.route('/user/logout').post(verifyJWT, logoutUser);
 router.post('/admin/dashboard', verifyJWT, verifyRoles("admin"), postAdminDashboard);
 
 router.get('/admin/dashboard', verifyJWT, verifyRoles("admin"), getAdminDashboard);
-router.get('/student/dashboard', verifyJWT, verifyRoles("student"), getStudentDashboard);
+router.get('/student/dashboard', verifyJWT, verifyRoles("student"), getStudentDashboard);// here we need to allow admin also
 
 export default router;
