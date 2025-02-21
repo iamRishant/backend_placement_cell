@@ -8,24 +8,21 @@ const placementSchema = new mongoose.Schema({
     },
 
     companyInfo:{
-        type: mongoose.Schema.Types.Mixed,
+        type: String,
         required: true,
     },
 
-    date:{
-        type: Date,
-        default: Date.now,  
-        required: true,
-    },
     jobTitle:{
         type: String,
         required: true,
     },
     
-    jobDescription: mongoose.Schema.Types.Mixed,
+    jobDescription:{
+        type : String,
+    },
 
     eligibility: {
-        type: mongoose.Schema.Types.Mixed,
+        type: String,
         required: true,
     },
 
