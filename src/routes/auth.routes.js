@@ -3,7 +3,9 @@ import { registerUser, loginUser, logoutUser } from "../controllers/auth.control
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { verifyRoles } from "../middlewares/role.middleware.js";
+
 import { getAdminDashboard, getStudentDashboard, registerCompany } from "../controllers/dashboard.controller.js";
+
 
 const router=Router();
 
@@ -21,6 +23,7 @@ router.route('/user/signup')
     );
 router.route('/user/login').post(loginUser);
 router.route('/user/logout').post(verifyJWT, logoutUser);
+
 
 // securing routes with middleware
 // between login and dashboard load, it loads the correct dashboard based on the role

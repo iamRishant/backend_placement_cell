@@ -64,6 +64,12 @@ const getAdminDashboard = async (req, res) => {
         throw new apiError(`500`, error?.message || "Internal server error");
     }
 }
+const postAdminDashboard = async (req, res) => {
+    if(req.user.role !== "admin") {
+        throw new apiError(403, "Unauthorized Admin Access!!!");
+    }
+    res.status(200).json({ message: "Admin dashboard loaded successfully" });
+}
 
 const getStudentDashboard = async (req, res) => {
     if(req.user.role !== "student") {
@@ -71,5 +77,6 @@ const getStudentDashboard = async (req, res) => {
     }  
     res.status(200).json({ message: "Student dashboard loaded successfully" });
 }
+
 
 export { registerCompany, getAdminDashboard, getStudentDashboard };
