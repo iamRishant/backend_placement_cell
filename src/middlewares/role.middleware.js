@@ -1,7 +1,7 @@
-export const verifyRoles = (role) => {
+export const verifyRoles = (...role) => {
     return (req, res, next) => {
-        if(req.user.role !== "admin"){
-            return res.status(403).json({message: "Access Denied!!!"});
+        if(!role.includes(req.user.role)){
+            return res.status(403).json({message:"Unauthorized access"});
         }
         next();
     }

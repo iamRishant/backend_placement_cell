@@ -64,6 +64,8 @@ const getAdminDashboard = async (req, res) => {
         throw new apiError(`500`, error?.message || "Internal server error");
     }
 }
+
+
 const postAdminDashboard = async (req, res) => {
     if(req.user.role !== "admin") {
         throw new apiError(403, "Unauthorized Admin Access!!!");
@@ -72,10 +74,18 @@ const postAdminDashboard = async (req, res) => {
 }
 
 const getStudentDashboard = async (req, res) => {
-    if(req.user.role !== "student") {
-        throw new apiError(403, "Unauthorized Student Access!!!");
-    }  
-    res.status(200).json({ message: "Student dashboard loaded successfully" });
+    try {
+        //anyone can access student dashboard if logged in
+        const companies = await Placement.find();
+
+        if (!companies || companies.length === 0) {
+            return res.status(404).json({ message: "No companies found." });
+        }
+
+        return res.status(200).json({ message:"Student Dashboard loaded", companies });
+    } catch (error) {
+        return res.status(500).json({ message: error.message || "Internal server error" });
+    }
 }
 
 

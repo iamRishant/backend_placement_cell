@@ -35,6 +35,6 @@ router.route('/admin/dashboard')
 router.route('/admin/dashboard/register-company')
 .post(verifyJWT, verifyRoles("admin"), registerCompany);
 
-router.get('/student/dashboard', verifyJWT, verifyRoles("student"), getStudentDashboard);
+router.get('/student/dashboard', verifyJWT, verifyRoles("student","admin"), getStudentDashboard);
 
 export default router;
