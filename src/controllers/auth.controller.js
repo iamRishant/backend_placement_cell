@@ -2,10 +2,9 @@ import { User } from "../models/user.model.js";
 import { apiError } from "../utils/apiError.js";
 import uploadOnCloudinary from '../utils/cloudinary.js'
 
-const registerUser= (req, res,next)=>{
+const registerUser= async (req, res,next)=>{
     // res.json({message:"OK"})
-    Promise.resolve()
-    .then(async()=>{
+    try{
         const {email, password, name, role} = req.body;
         
         // to do in the following steps, 
@@ -16,7 +15,7 @@ const registerUser= (req, res,next)=>{
         ){
             throw new apiError(400, "All fields are required.");
         }
-
+  
         if(role === "admin"){
             throw new apiError(403, "Unauthorized to register as admin.");
         }
@@ -54,8 +53,9 @@ const registerUser= (req, res,next)=>{
         }
 
         return res.status(201).json({message: "User registered successfully!", user: createdUser});
-    })
-    .catch((error) => next(error));
+    }catch(error){ 
+        throw new apiError(500, error?.message || "Internal server error")
+    };
 }
 
 

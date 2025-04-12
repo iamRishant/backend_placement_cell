@@ -3,8 +3,7 @@ import mongoose from "mongoose";
 const placementSchema = new mongoose.Schema({
     companyName:{
         type: String,
-        required: true,
-        lowercase: true
+        required: true
     },
 
     companyInfo:{
@@ -19,6 +18,7 @@ const placementSchema = new mongoose.Schema({
     
     jobDescription:{
         type : String,
+        required: true
     },
 
     eligibility: {
@@ -27,7 +27,7 @@ const placementSchema = new mongoose.Schema({
     },
 
     payPackage: {
-        type: mongoose.Schema.Types.Mixed,
+        type: String,
         required: true,
     },
 
@@ -38,19 +38,20 @@ const placementSchema = new mongoose.Schema({
     
     bondDescription: {
         type: String,
-        required: function(){ return this.bond;}
     },
     
     formDeadline:{
-        type: Date,
-        default: Date.now,
-        required: true,
+        type: Date, 
     },
 
     registerationLink: {
         type: String,
         required: true,
     },
+    appliedStudents: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }]
 }, {timestamps: true})
 
 export const Placement = mongoose.model("Placement", placementSchema)

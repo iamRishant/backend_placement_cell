@@ -13,15 +13,16 @@ const registerCompany = async (req, res) =>{
             jobDescription, eligibility, payPackage, bond, 
             bondDescription, formDeadline, registerationLink } = req.body;
         
+            console.log(req.body);
+        
         if(
-            [companyName, companyInfo, jobTitle, eligibility, payPackage, 
-                bond, formDeadline, registerationLink].some((field) => field?.trim() === "")
-        ){
+            [companyName, companyInfo, jobTitle, eligibility, jobDescription, payPackage, registerationLink].some((field) => (!field || (typeof field === "string" && field.trim() === "")))
+        ){  
             throw new apiError(400, "All fields are required.");
         }
 
         const existedCompany = await Placement.findOne({
-            companyName: companyName.toLowerCase()
+            companyName: companyName
         });
         
         if(existedCompany){
@@ -29,10 +30,14 @@ const registerCompany = async (req, res) =>{
         }
 
         const company = await Placement.create({
-            companyName: companyName.toLowerCase(),
+            companyName: companyName,
             companyInfo, jobTitle, jobDescription, eligibility, 
-            payPackage, bond, bondDescription, formDeadline, registerationLink
+            payPackage, bond, 
+            formDeadline: formDeadline? new Date(formDeadline): new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), 
+            bondDescription: bond? bondDescription:"No bond", 
+            registerationLink
         })
+
 
         const createdCompany = await Placement.findById(company._id);
 
@@ -44,7 +49,7 @@ const registerCompany = async (req, res) =>{
         .json({message: "Company registered successfully!", company: createdCompany});
 
     } catch (error) {
-        throw new apiError(`500`, error?.message || "Internal server error");
+        throw new apiError(500, error?.message || "Internal server error");
     }
 }
 
@@ -61,17 +66,17 @@ const getAdminDashboard = async (req, res) => {
         res.status(200)
         .json({ message: "Admin dashboard loaded successfully" }, companies);
     } catch (error) {
-        throw new apiError(`500`, error?.message || "Internal server error");
+        throw new apiError(500, error?.message || "Internal server error");
     }
 }
 
 
-const postAdminDashboard = async (req, res) => {
-    if(req.user.role !== "admin") {
-        throw new apiError(403, "Unauthorized Admin Access!!!");
-    }
-    res.status(200).json({ message: "Admin dashboard loaded successfully" });
-}
+// const postAdminDashboard = async (req, res) => {
+//     if(req.user.role !== "admin") {
+//         throw new apiError(403, "Unauthorized Admin Access!!!");
+//     }
+//     res.status(200).json({ message: "Admin dashboard loaded successfully" });
+// }
 
 const getStudentDashboard = async (req, res) => {
     try {

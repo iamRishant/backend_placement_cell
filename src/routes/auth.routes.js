@@ -32,7 +32,7 @@ router.route('/user/logout').post(verifyJWT, logoutUser);
 router.route('/admin/dashboard')
 .get(verifyJWT, verifyRoles("admin"), getAdminDashboard);
 
-router.route('/admin/dashboard/register-company')
+router.route('/register-company')   
 .post(verifyJWT, verifyRoles("admin"), registerCompany);
 
 router.get('/student/dashboard', verifyJWT, verifyRoles("student","admin"), getStudentDashboard);

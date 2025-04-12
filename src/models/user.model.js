@@ -1,3 +1,5 @@
+//admin pass- Pie, pie@gmail, Pie@123
+
 import mongoose  from "mongoose";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
@@ -30,8 +32,6 @@ const userSchema=new mongoose.Schema({
 {timestamps:true})
 
 
-
-
 // Before saving the password into database we are hashing it (this is like a middleware)
 userSchema.pre("save", async function (next){
     // NOTE: arrow function should not be used because that will not give current context
@@ -59,6 +59,7 @@ userSchema.methods.generateAccessToken= function(){
     return jwt.sign({
         _id:this._id,
         email:this.email,
+        role:this.role  
     },  
     
     process.env.ACCESS_TOKEN_SECRET,
