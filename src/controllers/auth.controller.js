@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import { apiError } from "../utils/apiError.js";
 import uploadOnCloudinary from '../utils/cloudinary.js'
 
-const registerUser= (req, res)=>{
+const registerUser= (req, res,next)=>{
     // res.json({message:"OK"})
     Promise.resolve()
     .then(async()=>{
