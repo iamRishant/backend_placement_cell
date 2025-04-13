@@ -5,6 +5,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { verifyRoles } from "../middlewares/role.middleware.js";
 
 import { getAdminDashboard, getStudentDashboard, registerCompany } from "../controllers/dashboard.controller.js";
+import { getCurrentUser, updateResume } from "../controllers/user.controller.js";
 
 
 const router=Router();
@@ -36,5 +37,13 @@ router.route('/register-company')
 .post(verifyJWT, verifyRoles("admin"), registerCompany);
 
 router.get('/student/dashboard', verifyJWT, verifyRoles("student","admin"), getStudentDashboard);
+
+router.post('/student/update-resume',
+    verifyJWT,
+    upload.fields([
+    {name: "resume", maxCount: 1}]),
+    updateResume
+);
+router.get('/student/get-user-details',verifyJWT,getCurrentUser);
 
 export default router;

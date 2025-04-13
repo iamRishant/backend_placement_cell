@@ -14,7 +14,7 @@ export const verifyJWT = async (req, __, next) => {
         const user = await User.findById(decodeToken?._id).select("-password");
         
         if(!user){
-            throw new apiError(401, "Ivalid Access Token!!!");
+            throw new apiError(401, "Invalid Access Token!!!");
         }
 
         req.user = user;
