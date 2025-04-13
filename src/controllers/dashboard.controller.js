@@ -64,7 +64,9 @@ const getAdminDashboard = async (req, res) => {
         const companies = await Placement.find({}).populate("appliedStudents", "name email");
 
         res.status(200)
-        .json({ message: "Admin dashboard loaded successfully" }, companies);
+        .json({ message: "Admin dashboard loaded successfully",
+            companies: companies
+        });
     } catch (error) {
         throw new apiError(500, error?.message || "Internal server error");
     }

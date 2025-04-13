@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import { apiError } from "../utils/apiError.js";
 import uploadOnCloudinary from '../utils/cloudinary.js'
 
-const registerUser= async (req, res,next)=>{
+const registerUser= async (req, res)=>{
     // res.json({message:"OK"})
     try{
         const {email, password, name, role} = req.body;
