@@ -4,7 +4,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { verifyRoles } from "../middlewares/role.middleware.js";
 
-import { getAdminDashboard, getStudentDashboard, registerCompany } from "../controllers/dashboard.controller.js";
+import { getAdminDashboard, getStudentDashboard, registerCompany, updateCompany } from "../controllers/dashboard.controller.js";
 import { getCurrentUser, updateResume } from "../controllers/user.controller.js";
 
 
@@ -45,5 +45,7 @@ router.post('/student/update-resume',
     updateResume
 );
 router.get('/student/get-user-details',verifyJWT,getCurrentUser);
+
+router.post('/admin/update-company',verifyJWT,updateCompany);
 
 export default router;
