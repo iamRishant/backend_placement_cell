@@ -3,10 +3,9 @@ import { registerUser, loginUser, logoutUser } from "../controllers/auth.control
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { verifyRoles } from "../middlewares/role.middleware.js";
-
+import { verifyEmail } from "../middlewares/verifyEmail.middleware.js";
 import { getAdminDashboard, getStudentDashboard, registerCompany, updateCompany } from "../controllers/dashboard.controller.js";
 import { getCurrentUser, updateResume } from "../controllers/user.controller.js";
-
 
 const router=Router();
 
@@ -14,6 +13,8 @@ const router=Router();
 // add middleware to handle files, as want to handle resume file from multer 
 // add multiple http methods like get, post in the same route
 // forms a proper chain of routing
+
+router.route('/user/verify-email').post(verifyEmail);
 
 router.route('/user/signup')
     .post( 
