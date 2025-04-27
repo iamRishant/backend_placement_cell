@@ -15,6 +15,10 @@ const userSchema=new mongoose.Schema({
         unique:true,
         index:true // helps in searching the email faster
     },
+    emailVerified:{
+        type:Boolean,
+        default:false
+    },
     password:{
         type:String,
         required:[true,"Password is Required"]
@@ -67,11 +71,6 @@ userSchema.methods.generateAccessToken= function(){
     {
         expiresIn:process.env.ACCESS_TOKEN_EXPIRY
     }
-)
-
-}
-
-
-
+)}
 
 export const User=mongoose.model('User',userSchema);

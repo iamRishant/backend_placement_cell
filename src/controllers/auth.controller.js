@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js";
 import { apiError } from "../utils/apiError.js";
 import uploadOnCloudinary from '../utils/cloudinary.js'
+import { Otp } from "../models/otp.model.js";
 
 const registerUser= async (req, res)=>{
     // res.json({message:"OK"})
@@ -10,6 +11,11 @@ const registerUser= async (req, res)=>{
         // to do in the following steps, 
         // confirm null fields first
         
+        const verification = await Otp.findOne({email});
+        if(!verification || verification?.verified === false){
+            throw new apiError(403, "Email not verified. Please verify your email first.");
+        }
+
         if(
             [email, password, name, role].some((field) => field?.trim() === "")
         ){
@@ -51,6 +57,7 @@ const registerUser= async (req, res)=>{
         if(!createdUser){
             throw new apiError(500, "Something went wrong while registration.");
         }
+        await Otp.deleteOne({email});
 
         return res.status(201).json({message: "User registered successfully!", user: createdUser});
     }catch(error){ 

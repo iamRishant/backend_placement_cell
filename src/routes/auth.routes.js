@@ -3,9 +3,9 @@ import { registerUser, loginUser, logoutUser } from "../controllers/auth.control
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { verifyRoles } from "../middlewares/role.middleware.js";
-import { verifyEmail } from "../middlewares/verifyEmail.middleware.js";
 import { getAdminDashboard, getStudentDashboard, registerCompany, updateCompany } from "../controllers/dashboard.controller.js";
 import { getCurrentUser, updateResume } from "../controllers/user.controller.js";
+import { sendOtp, verifyOtp } from "../controllers/otp.controller.js";
 
 const router=Router();
 
@@ -14,8 +14,7 @@ const router=Router();
 // add multiple http methods like get, post in the same route
 // forms a proper chain of routing
 
-router.route('/user/verify-email').post(verifyEmail);
-
+  
 router.route('/user/signup')
     .post( 
         upload.fields([
@@ -23,6 +22,10 @@ router.route('/user/signup')
         ]),
         registerUser
     );
+
+router.route('/user/send-otp').post(sendOtp)
+router.route('/user/verify-otp').post(verifyOtp)
+
 router.route('/user/login').post(loginUser);
 router.route('/user/logout').post(verifyJWT, logoutUser);
 
