@@ -15,10 +15,6 @@ const userSchema=new mongoose.Schema({
         unique:true,
         index:true // helps in searching the email faster
     },
-    emailVerified:{
-        type:Boolean,
-        default:false
-    },
     password:{
         type:String,
         required:[true,"Password is Required"]
