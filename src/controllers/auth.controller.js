@@ -11,17 +11,18 @@ const registerUser= async (req, res)=>{
         // to do in the following steps, 
         // confirm null fields first
         
-        const verification = await Otp.findOne({email});
-        if(!verification || verification?.verified === false){
-            throw new apiError(403, "Email not verified. Please verify your email first.");
-        }
-
+        
         if(
             [email, password, name, role].some((field) => field?.trim() === "")
         ){
             throw new apiError(400, "All fields are required.");
         }
-  
+        
+        const verification = await Otp.findOne({email});
+        if(!verification || verification?.verified === false){
+            throw new apiError(403, "Email not verified. Please verify your email first.");
+        }
+          
         if(role === "admin"){
             throw new apiError(403, "Unauthorized to register as admin.");
         }
